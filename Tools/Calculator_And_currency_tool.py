@@ -28,29 +28,31 @@ class CurrencyCalculator:
         """Setup all tools for the currency conversion, expense calculation & Hotel cost estimations """
 
         @tool
-        def currency_convertor(from_currency:str ,to_currency:str , value :int|float):
+        def currency_convertor(from_currency:str ,to_currency:str , value: float):
             """
             Convert currency from one type to another using Alpha Vantage API.
             
             Args:
                 from_currency (str): The source currency code (e.g., 'USD', 'EUR')
                 to_currency (str): The target currency code (e.g., 'USD', 'EUR')
-                value (int|float): The amount to convert
+                value (float): The amount to convert
             
             Returns:
                 float: The converted currency value
             """
-            convertor = AlphaVantageAPIWrapper(alphavantage_api_key=os.getenv("ALPHAVANTAGE_API_KEY"))
-            response= convertor._get_exchange_rate(from_currency,to_currency)
-            
-            exchange_rate = response['Realtime Currency Exchange Rate']['5. Exchange Rate']
-            
-            return value * float(exchange_rate)
-
-
+            try:
+                convertor = AlphaVantageAPIWrapper(alphavantage_api_key=os.getenv("ALPHAVANTAGE_API_KEY"))
+                response = convertor._get_exchange_rate(from_currency, to_currency)
+                
+                exchange_rate = response['Realtime Currency Exchange Rate']['5. Exchange Rate']
+                
+                return float(value) * float(exchange_rate)
+            except Exception as e:
+                print(f"Currency conversion error: {e}")
+                return float(value)  # Return original value if conversion fails
 
         @tool
-        def estimate_total_hotel_cost(price_per_night:str, total_days:float) -> float:
+        def estimate_total_hotel_cost(price_per_night: float, total_days: float) -> float:
             """Calculate total hotel cost"""
             return self.calculator.multiply(price_per_night, total_days)
         

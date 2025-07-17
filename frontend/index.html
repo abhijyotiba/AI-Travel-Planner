@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Travel Planner - Your Personal Trip Assistant</title>
+  <meta name="description" content="Plan your perfect trip with AI assistance. Get personalized itineraries, hotel recommendations, and travel insights.">
+  <meta name="keywords" content="AI travel planner, trip planning, itinerary, travel assistant, vacation planning">
+  
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+  
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✈️</text></svg>">
+  
+  <meta name="theme-color" content="#667eea">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+</head>
+<body>
+  <div class="container">
+    <div id="loading-screen" class="loading-screen">
+      <div class="loading-content">
+        <div class="loading-spinner">
+          <i class="fas fa-plane"></i>
+        </div>
+        <h2>Preparing your travel assistant...</h2>
+        <div class="loading-bar">
+          <div class="loading-progress"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="main-app" class="main-app" style="display: none;">
+      <header class="header" role="banner">
+        <div class="header-content">
+          <div class="logo">
+            <i class="fas fa-plane" aria-hidden="true"></i>
+            <h1>AI Travel Planner</h1>
+            <span class="beta-badge">BETA</span>
+          </div>
+          <div class="header-actions">
+            <button id="download-btn" class="download-btn" style="display: none;" aria-label="Download travel plan">
+              <i class="fas fa-download" aria-hidden="true"></i>
+              <span>Download Plan</span>
+            </button>
+            <button id="clear-chat-btn" class="clear-btn" title="Clear conversation" aria-label="Clear conversation history">
+              <i class="fas fa-trash-alt" aria-hidden="true"></i>
+              <span>Clear Chat</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main class="chat-container" role="main">
+        <div id="chatbox" class="chatbox" role="log" aria-live="polite" aria-label="Chat conversation">
+          <div class="welcome-message">
+            <div class="message bot-message">
+              <div class="message-avatar">
+                <i class="fas fa-robot" aria-hidden="true"></i>
+              </div>
+              <div class="message-content">
+                <div class="message-text">
+                  <div class="welcome-header">
+                    <h2>👋 Welcome to AI Travel Planner!</h2>
+                    <p>I'm your personal travel assistant, ready to help you create amazing experiences.</p>
+                  </div>
+                  
+                  <div class="features-grid">
+                    <div class="feature-card">
+                      <i class="fas fa-route"></i>
+                      <span>Day-by-day itineraries</span>
+                    </div>
+                    <div class="feature-card">
+                      <i class="fas fa-hotel"></i>
+                      <span>Hotel recommendations</span>
+                    </div>
+                    <div class="feature-card">
+                      <i class="fas fa-map-marker-alt"></i>
+                      <span>Local attractions</span>
+                    </div>
+                    <div class="feature-card">
+                      <i class="fas fa-utensils"></i>
+                      <span>Restaurant suggestions</span>
+                    </div>
+                    <div class="feature-card">
+                      <i class="fas fa-car"></i>
+                      <span>Transportation options</span>
+                    </div>
+                    <div class="feature-card">
+                      <i class="fas fa-calculator"></i>
+                      <span>Budget breakdowns</span>
+                    </div>
+                  </div>
+                  
+                  <div class="cta-section">
+                    <p><strong>Ready to start planning?</strong></p>
+                    <p>Tell me where you'd like to go and for how long!</p>
+                    <div class="example-queries">
+                      <button class="example-btn" data-query="Plan a 7-day romantic trip to Paris for 2 people with a budget of $3000">
+                        Paris Romance ✨
+                      </button>
+                      <button class="example-btn" data-query="Create a 5-day adventure itinerary for Bali on a moderate budget">
+                        Bali Adventure 🏄‍♀️
+                      </button>
+                      <button class="example-btn" data-query="Plan a family-friendly 4-day trip to Tokyo with kids">
+                        Tokyo Family Fun 👨‍👩‍👧‍👦
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="message-time" id="welcome-time">12:00 PM</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="typing-indicator" class="typing-indicator" aria-hidden="true">
+          <div class="message bot-message">
+            <div class="message-avatar">
+              <i class="fas fa-robot" aria-hidden="true"></i>
+            </div>
+            <div class="message-content">
+              <div class="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <div class="typing-text">AI is thinking...</div>
+            </div>
+          </div>
+        </div>
+
+        <form id="chat-form" class="chat-form" role="form">
+          <div class="input-container">
+            <div class="input-wrapper">
+              <textarea 
+                id="user-input" 
+                placeholder="Plan a trip to Goa for 5 days with a medium budget..."
+                maxlength="500"
+                rows="1"
+                aria-label="Enter your travel planning request"
+                aria-describedby="char-count"
+              ></textarea>
+            </div>
+            <div class="input-actions">
+              <div class="input-controls">
+                <span id="char-count" class="char-count" aria-live="polite">0/500</span>
+              </div>
+              <button type="submit" id="send-btn" class="send-btn" disabled aria-label="Send message">
+                <i class="fas fa-paper-plane" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </main>
+
+      <footer class="footer" role="contentinfo">
+        <div class="footer-content">
+          <p>
+            <i class="fas fa-shield-alt"></i>
+            Your data is processed securely. 
+            <a href="#" class="footer-link">Privacy Policy</a> | 
+            <a href="#" class="footer-link">Terms of Service</a>
+          </p>
+          <div class="session-info">
+            <span id="session-indicator">
+              <i class="fas fa-circle online"></i>
+              Session Active
+            </span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <div id="error-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3><i class="fas fa-exclamation-triangle"></i> Error</h3>
+          <button id="close-error-modal" class="close-btn">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p id="error-message">An error occurred. Please try again.</p>
+        </div>
+        <div class="modal-footer">
+          <button id="retry-btn" class="btn btn-primary">
+            <i class="fas fa-redo"></i> Retry
+          </button>
+          <button id="cancel-error-modal" class="btn btn-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

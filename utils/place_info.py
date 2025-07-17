@@ -1,5 +1,4 @@
 import os
-import json
 from langchain_tavily import TavilySearch
 from langchain_google_community import GooglePlacesTool, GooglePlacesAPIWrapper
 from dotenv import load_dotenv

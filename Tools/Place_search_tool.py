@@ -40,9 +40,9 @@ class PlaceSearchTool:
         def search_activities(place:str) -> str:
             """Search activities of a place"""
             try:
-                restaurants_result = self.google_places_search.google_search_activity(place)
-                if restaurants_result:
-                    return f"Following are the activities in and around {place} as suggested by google: {restaurants_result}"
+                activities_result = self.google_places_search.google_search_activity(place)
+                if activities_result:
+                    return f"Following are the activities in and around {place} as suggested by google: {activities_result}"
             except Exception as e:
                 tavily_result = self.tavily_search.tavily_search_activity(place)
                 return f"Google cannot find the details due to {e}. \nFollowing are the activities of {place}: {tavily_result}"  ## Fallback search using tavily in case google places fail
@@ -51,9 +51,9 @@ class PlaceSearchTool:
         def search_transportation(place:str) -> str:
             """Search transportation of a place"""
             try:
-                restaurants_result = self.google_places_search.google_search_transportation(place)
-                if restaurants_result:
-                    return f"Following are the modes of transportation available in {place} as suggested by google: {restaurants_result}"
+                transportation_result = self.google_places_search.google_search_transportation(place)
+                if transportation_result:
+                    return f"Following are the modes of transportation available in {place} as suggested by google: {transportation_result}"
             except Exception as e:
                 tavily_result = self.tavily_search.tavily_search_transportation(place)
                 return f"Google cannot find the details due to {e}. \nFollowing are the modes of transportation available in {place}: {tavily_result}"  ## Fallback search using tavily in case google places fail
