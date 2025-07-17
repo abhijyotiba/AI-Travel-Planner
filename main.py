@@ -99,3 +99,27 @@ async def health_check():
     return {"status": "healthy", "message": "AI Travel Agent is running"}
 
 
+from starlette.responses import StreamingResponse
+from utils.pdf_generator import generate_pdf_from_text # Ensure this import
+
+@app.get("/generate-pdf/{session_id}")
+async def generate_travel_plan_pdf(session_id: str):
+    try:
+        history = graph.get_session_history(session_id)
+        # Assuming the last AI message is the full plan
+        full_plan_message = next((msg.content for msg in reversed(history) if msg.type == 'ai'), None)
+
+        if not full_plan_message:
+            raise HTTPException(status_code=404, detail="No travel plan found for this session.")
+
+        pdf_buffer = generate_pdf_from_text(full_plan_message)
+        pdf_buffer.seek(0) # Rewind the buffer to the beginning
+
+        return StreamingResponse(
+            pdf_buffer,
+            media_type="application/pdf",
+            headers={"Content-Disposition": f"attachment; filename=travel_plan_{session_id}.pdf"}
+        )
+    except Exception as e:
+        print(f"Error generating PDF: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error generating PDF: {str(e)}")
