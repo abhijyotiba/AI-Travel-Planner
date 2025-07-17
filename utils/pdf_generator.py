@@ -5,8 +5,20 @@ import datetime
 def remove_non_latin1(text: str) -> str:
     return text.encode("latin-1", "ignore").decode("latin-1")
 
+class CustomFPDF(FPDF):
+    def footer(self):
+        # Position at 1.5 cm from bottom
+        self.set_y(-15)
+        # Arial italic 8
+        self.set_font('Arial', 'I', 8)
+        # Text color in gray
+        self.set_text_color(128)
+        # Page number
+        self.cell(0, 10, 'Page ' + str(self.page_no()) + '/{nb}', 0, 0, 'C')
+
 def generate_pdf_from_text(text: str) -> io.BytesIO:
-    pdf = FPDF()
+    pdf = CustomFPDF() # Use the custom FPDF class
+    pdf.alias_nb_pages() # Required for {nb} alias in footer
     pdf.add_page()
     pdf.set_auto_page_break(auto=True, margin=15)
 
@@ -54,35 +66,3 @@ def generate_pdf_from_text(text: str) -> io.BytesIO:
     # Output to BytesIO for download
     pdf_bytes = pdf.output(dest='S').encode('latin1')
     return io.BytesIO(pdf_bytes)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# from fpdf import FPDF
-# import io
-
-# def generate_pdf_from_text(text: str) -> io.BytesIO:
-#     pdf = FPDF()
-#     pdf.add_page()
-#     pdf.set_font("Arial", size=12)
-#     pdf.set_auto_page_break(auto=True, margin=15)
-
-#     for line in text.split('\n'):
-#         pdf.multi_cell(0, 10, line)
-
-#     # ✅ Get PDF output as bytes string
-#     pdf_bytes = pdf.output(dest='S').encode('latin1')  # 'S' = return as string
-
-#     # ✅ Convert to BytesIO stream for download
-#     pdf_stream = io.BytesIO(pdf_bytes)
-#     return pdf_stream
