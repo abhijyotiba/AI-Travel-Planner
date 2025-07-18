@@ -12,6 +12,7 @@ httpx
 requests
 fastapi
 uvicorn
+jinja2
 pydantic
 streamlit
 python-dotenv

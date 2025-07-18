@@ -2,9 +2,10 @@ import warnings
 # Suppress SyntaxWarnings from langchain-tavily package
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="langchain_tavily")
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from Agent.agent import AgentGraph
 from starlette.responses import JSONResponse
 from pydantic import BaseModel
@@ -17,6 +18,12 @@ from typing import List, Optional
 load_dotenv()
 
 app = FastAPI()
+
+# Mount static files
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Configure templates
+templates = Jinja2Templates(directory="templates")
 
 app.add_middleware(
     CORSMiddleware,
@@ -98,6 +105,11 @@ async def health_check():
     """Health check endpoint"""
     return {"status": "healthy", "message": "AI Travel Agent is running"}
 
+@app.get("/")
+async def read_root(request: Request):
+    """Serve the main HTML page"""
+    return templates.TemplateResponse("index.html", {"request": request})
+
 
 from starlette.responses import StreamingResponse
 from utils.pdf_generator import generate_pdf_from_text # Ensure this import
@@ -123,3 +135,4 @@ async def generate_travel_plan_pdf(session_id: str):
     except Exception as e:
         print(f"Error generating PDF: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error generating PDF: {str(e)}")
+    

@@ -159,7 +159,7 @@ class TravelPlannerChat {
     try {
       // Define your backend URL. For local development, it's usually http://localhost:8000
       // For deployment, this should be an environment variable or configured dynamically.
-      const BASE_URL = "http://localhost:8000"; 
+      const BASE_URL = window.location.origin; 
 
       const response = await fetch(`${BASE_URL}/query`, {
         method: "POST",
@@ -307,7 +307,7 @@ class TravelPlannerChat {
     }
 
     try {
-      const BASE_URL = "http://localhost:8000"; // Ensure this matches your backend URL
+      const BASE_URL = window.location.origin; // Ensure this matches your backend URL
       const response = await fetch(`${BASE_URL}/generate-pdf/${this.sessionId}`);
 
       if (!response.ok) {
@@ -343,7 +343,7 @@ class TravelPlannerChat {
     this.showConfirmationModal("Are you sure you want to clear the chat history? This will start a new conversation session.", async () => {
       try {
         // Clear session on backend using LangGraph memory
-        const BASE_URL = "http://localhost:8000"; // Ensure this matches your backend URL
+        const BASE_URL = window.location.origin; // Ensure this matches your backend URL
         const response = await fetch(`${BASE_URL}/clear-session`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
