@@ -16,7 +16,7 @@ Perfect for travelers who want:
 
 ## 🔗 Live Demo
 
-🌐 [Live App on Render](https://your-app-url.onrender.com)
+🌐 [Live App on Render](https://ai-travel-planner-542r.onrender.com/)
 
 ## ✨ Features
 
