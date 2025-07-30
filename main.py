@@ -58,6 +58,7 @@ async def query_travel_agent(query: QueryRequest):
         
         print(f"Graph output type: {type(output)}")
         print(f"Graph output: {output}")
+        print("✅Response has been created successfully")
 
         # Extract the AI response
         if isinstance(output, dict) and "messages" in output:
