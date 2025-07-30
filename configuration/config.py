@@ -9,7 +9,7 @@ LLM_PROVIDER = "groq"  # Switched to Groq for free usage
 # Model names for each provider
 MODEL_NAMES = {
     "openai": "gpt-4o-mini",  # Fixed invalid model name
-    "groq": "meta-llama/llama-4-scout-17b-16e-instruct",
+    "groq": "meta-llama/llama-4-maverick-17b-128e-instruct",
     "openrouter": "mistralai/mistral-small-3.2-24b-instruct"
 }
 
